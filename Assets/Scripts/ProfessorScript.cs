@@ -7,6 +7,8 @@ public class ProfessorScript : MonoBehaviour
     [SerializeField] private float turnCooldown = 10f;         // time for professor to turn around to student/player
     [SerializeField] private float turnDuration = 5f;         // time for professor to turn back away from student/player
 
+    [SerializeField] private GameObject gameOverCanvas;
+
     private float timer;
 
     private bool isProfessorTurned = false;
@@ -97,6 +99,9 @@ public class ProfessorScript : MonoBehaviour
         {
             // game over screen display
             print("Game Over");
+            gameOverCanvas.SetActive(true);
+
+            GameManager.instance.QuitGame();
         }
 
             

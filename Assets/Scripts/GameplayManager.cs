@@ -3,9 +3,17 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject pauseMenuUI;
+    public static GameManager instance;
+
+    [SerializeField] private GameObject pauseMenuUI;
 
     private bool isPaused = false;
+
+    private void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+    }
 
     void Start()
     {
@@ -46,5 +54,14 @@ public class GameManager : MonoBehaviour
         #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false; // stop play mode in the editor
         #endif
+    }
+
+    public void RestartGame()
+    {
+        // Get the current active scene
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        // Reload the current scene
+        SceneManager.LoadScene(currentScene.name);
     }
 }

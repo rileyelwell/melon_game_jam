@@ -1,33 +1,50 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
-public class PhoneInteractionsScript : MonoBehaviour
+public class WordSelector : MonoBehaviour
 {
     [SerializeField] private TMP_Text wordDisplay;
     [SerializeField] private Button leftArrowButton, rightArrowButton;
+    [SerializeField] private string[] dictKeys;
+    private int currentDictKey = 0;
 
-    private string[] words = { "Option 1", "Option 2", "Option 3", "Option 4" };
+    private string[] words;
     private int currentIndex = 0;
 
     void Start()
     {
+        if (ScriptDataDictionary.scriptDict.TryGetValue(dictKeys[currentDictKey], out string[] output))
+        {
+            // Use the array of strings
+            words = output;
+        }
+
         // assign the button click events
         leftArrowButton.onClick.AddListener(FlipLeft);
         rightArrowButton.onClick.AddListener(FlipRight);
 
         // Display the first word
-        UpdateWordDisplay();
+        UpdatePhraseDisplay();
     }
 
-    void SendText()
+    public void ResetPhrases()
     {
-        // convert the current selected words into a full text string 
-        
-
-        // move this string to display as a "text" above the typing area
-
         // reset the typing to be either null or contain the next set of words
+        wordDisplay.text = "";
+        currentIndex = 0;
+
+        // update list of words to be next set of choices
+        currentDictKey++;
+        if (ScriptDataDictionary.scriptDict.TryGetValue(dictKeys[currentDictKey], out string[] output))
+        {
+            // Use the array of strings
+            // Debug.Log("Words for Choices1: " + string.Join(", ", output));
+            words = output;
+        }
+
+        // choicesCanvas.gameObject.SetActive(false);
     }
 
     void FlipLeft()
@@ -38,7 +55,7 @@ public class PhoneInteractionsScript : MonoBehaviour
             currentIndex = words.Length - 1; 
 
         // update displayed word
-        UpdateWordDisplay();
+        UpdatePhraseDisplay();
     }
 
     void FlipRight()
@@ -49,15 +66,15 @@ public class PhoneInteractionsScript : MonoBehaviour
             currentIndex = 0;
 
         // update displayed word
-        UpdateWordDisplay();
+        UpdatePhraseDisplay();
     }
 
-    void UpdateWordDisplay()
+    public void UpdatePhraseDisplay()
     {
         wordDisplay.text = words[currentIndex];
     }
 
-    string GetCurrentWord() { return wordDisplay.text; }
+    public string GetCurrentPhrase() { return wordDisplay.text; }
 
     
 }
